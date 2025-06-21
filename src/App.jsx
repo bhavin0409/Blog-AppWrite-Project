@@ -5,8 +5,8 @@ import authService from './appwrite/auth.service'
 import { login , logout} from './store/authSlice'
 import Loading from './components/loader/Loading'
 import Header from './components/header/Header'
-import Footer from './components/footer/Footer'
 import { Outlet } from 'react-router-dom'
+import Footer from './components/footer/Footer'
 
 
 function App() {
@@ -36,9 +36,8 @@ function App() {
       <div className='w-full block '>
         <Header />
         <main>
-          {/* <Outlet/> */}
+          <Outlet/>
         </main>
-        A Blog App with AppWrite.
         <Footer />
       </div>
     </div>
