@@ -19,33 +19,43 @@ const PostForm = ({ post }) => {
             status: post?.status || 'active',
         }
     })
-    
+
     const userData = useSelector((state) => state.auth.userData)
 
     const onsubmit = async (data) => {
         if (post) {
             console.log(data.image[0]);
-            
+
             const file = data.image[0] ? await fileService.fileUpload(data.image[0]) : null
 
             if (file) {
-                fileService.deleteFile(post.featuredImage)
+                fileService.deleteFile(post.featured - Image)
             }
 
             const dbPost = await databaseService.updatePost(post.$id, {
                 ...data,
-                "featured-Image": file ? file.$id : undefined
+                "featuredImage": file ? file.$id : undefined
             })
 
             if (dbPost) {
                 navigate(`/post/${dbPost.$id}`)
             }
         } else {
+            if (!data.image || !data.image[0]) {
+                alert("Featured image is required!");
+                return;
+            }
+
             const file = data.image[0] ? await fileService.fileUpload(data.image[0]) : null
+
+            if (!file) {
+                alert("Image upload failed!");
+                return;
+            }
 
             if (file) {
                 const fileID = file.$id
-                data["featured-Image"] = fileID
+                data["featuredImage"] = fileID
 
                 const dbPost = await databaseService.createPost({
                     ...data,
@@ -53,7 +63,6 @@ const PostForm = ({ post }) => {
                 })
 
                 console.log(dbPost);
-                
 
                 if (dbPost) {
                     navigate(`/post/${dbPost.$id}`)
@@ -65,18 +74,18 @@ const PostForm = ({ post }) => {
     const slugTransform = useCallback((value) => {
         if (value && typeof value == 'string') {
             return value
-            .trim()
-            .toLowerCase()
-            .replace(/\s+/g, '-')
+                .trim()
+                .toLowerCase()
+                .replace(/\s+/g, '-')
         }
         return ''
     })
 
     useEffect(() => {
-        const subscription = watch((value , {name}) => {
+        const subscription = watch((value, { name }) => {
             if (name == 'title') {
-                setValue('slug' , slugTransform(value.title) , {
-                    shouldValidate:true
+                setValue('slug', slugTransform(value.title), {
+                    shouldValidate: true
                 })
             }
         })
@@ -84,24 +93,24 @@ const PostForm = ({ post }) => {
         return () => {
             subscription.unsubscribe()
         }
-        
-    }, [watch , slugTransform , setValue])
-    
+
+    }, [watch, slugTransform, setValue])
+
 
 
     return (
         <form onSubmit={handleSubmit(onsubmit)} className='flex flex-wrap'>
             <div className="w-2/3 px-10 flex flex-wrap" >
-                <Input 
+                <Input
                     label='Title :'
                     placeholder="Enter your title"
                     className="mb-4 w-full p-2 rounded-lg"
                     {...register("title", {
-                        required:{
-                            value:true ,
-                            message:'Please enter your title'
+                        required: {
+                            value: true,
+                            message: 'Please enter your title'
                         },
-                        minLength:{
+                        minLength: {
                             value: 5,
                             message: 'Title must be at least 5 characters long'
                         },
@@ -112,25 +121,25 @@ const PostForm = ({ post }) => {
                     label='Slug :'
                     placeholder="Enter your slug"
                     className="mb-4 w-full p-2 rounded-lg"
-                    {...register("slug" , {
-                        required:{
-                            value:true ,
+                    {...register("slug", {
+                        required: {
+                            value: true,
                             message: 'Slug is required'
                         },
                     })}
-                    onInput = {(e) => {
-                        setValue('slug' , slugTransform(e.currentTarget.value), {
-                            shouldValidate:true
+                    onInput={(e) => {
+                        setValue('slug', slugTransform(e.currentTarget.value), {
+                            shouldValidate: true
                         })
                     }}
                 />
 
-                {<RTE 
+                {<RTE
                     label='Content :'
                     name="content"
                     control={control}
                     defaultValue={getValues('content')}
-                /> || <Loading/>}
+                /> || <Loading />}
             </div>
 
             <div className='w-1/3 px-8 flex flex-col items-start'>
@@ -139,15 +148,15 @@ const PostForm = ({ post }) => {
                     type="file"
                     className='mb-4 w-full p-2 '
                     accept='image/jpg , image/png , image/jpeg , image/gif , image/bmp'
-                    {...register("image" , {
+                    {...register("image", {
                         require: !post,
                     })}
                 />
 
                 {post && (
                     <div className='w-full mb-4'>
-                        <img 
-                            src={fileService.getFilePreview(post["featured-Image"])} 
+                        <img
+                            src={fileService.getFilePreview(post["featured-Image"])}
                             alt={post.title}
                             className='rounded-lg'
                         />
@@ -155,18 +164,18 @@ const PostForm = ({ post }) => {
                 )}
 
                 <Select
-                    options = {['Active' , 'Inactive']}
-                    label = 'Status :'
-                    className = 'mb-4'
-                    {...register('status' , {
-                        required:{
-                            value:true ,
+                    options={['Active', 'Inactive']}
+                    label='Status :'
+                    className='mb-4'
+                    {...register('status', {
+                        required: {
+                            value: true,
                             message: 'Status is required'
                         }
                     })}
                 />
 
-                <Button 
+                <Button
                     type='submit'
                     bgColor={post ? 'bg-green-500' : 'bg-blue-500'}
                     classname='w-full'
