@@ -2,7 +2,7 @@ import React from 'react'
 import { Container  ,LogoutBtn } from '../index'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import Logo from '../logo/Logo'
+import Logo from '../Logo/Logo'
 
 
 const Header = () => {
