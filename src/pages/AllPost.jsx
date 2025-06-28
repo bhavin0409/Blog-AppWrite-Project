@@ -8,31 +8,35 @@ const AllPost = () => {
     const [posts, setPosts] = useState([])
     const [loading, setLoading] = useState(true)
 
-    databaseService.getPosts([])
-    .then((posts)=>{
-        if (posts) {
-            setPosts(posts.documents)
-        }
-    })
-    .catch((err)=>{
-        console.log("All Post :: Error ::" , err)
-    })
+    useEffect(() => {
+        setLoading(true);
+        databaseService.getPosts([])
+            .then((posts) => {
+                if (posts) {
+                    setPosts(posts.documents);
+                }
+            })
+            .catch((err) => {
+                console.log("All Post :: Error ::", err);
+            })
+            .finally(() => setLoading(false));
+    }, []);
 
-    return posts ? (
+    return !loading ? (posts ? (
         <div className='w-full py-8'>
             <Container>
                 <div className='flex flex-wrap'>
-                    {posts.map((post) => {
+                    {posts.map((post) => (
                         <div key={post.$id} className='p-4 w-1/4'>
-                            <PostCard post={post} />
+                            <PostCard post={post} featuredImage={post["featured-Image"]} />
                         </div>
-                    })}
+                    ))}
                 </div>
             </Container>
         </div>
     ) : (
-        <Loading/>
-    )
+        <>No Post is Available</>
+    )) : (<Loading />)
 }
 
 export default AllPost

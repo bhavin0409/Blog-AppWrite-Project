@@ -42,8 +42,6 @@ export class FileUploadService{
     }
 
     getFilePreview(fileId){
-        console.log(fileId);
-        
         try {
             return this.storage.getFilePreview(
                 config.appWriteBucketID,
