@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import authService from '../appwrite/auth.service'
 import { Button, Input } from './index'
 import { login } from '../store/authSlice'
-import Logo from './logo/Logo'
+import Logo from './Logo/Logo'
 
 
 const Register = () => {
