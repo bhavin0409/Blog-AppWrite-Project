@@ -13,8 +13,6 @@ export default function Post() {
 
     const userData = useSelector((state) => state.auth.userData);
 
-    const isAuthor = post && userData ? post.userId === userData.$id : false;
-
     useEffect(() => {
         if (slug) {
             databaseService.getPost(slug).then((post) => {
@@ -23,6 +21,8 @@ export default function Post() {
             });
         } else navigate("/");
     }, [slug, navigate]);
+    
+    const isAuthor = post && userData ? post.userID === userData.$id : false;
 
     const deletePost = () => {
         databaseService.deletePost(post.$id).then((status) => {
@@ -42,20 +42,19 @@ export default function Post() {
                         alt={post.title}
                         className="rounded-xl"
                     />
-
+                </div>
                     {isAuthor && (
-                        <div className="absolute right-6 top-6">
+                        <div className="flex flex-row gap-4 justify-center">
                             <Link to={`/edit-post/${post.$id}`}>
-                                <Button bgColor="bg-green-500" className="mr-3">
+                                <Button className="bg-green-500 px-6 py-2 duration-200 mr-3">
                                     Edit
                                 </Button>
                             </Link>
-                            <Button bgColor="bg-red-500" onClick={deletePost}>
+                            <Button className="bg-red-500 px-6 py-2 duration-200" onClick={deletePost}>
                                 Delete
                             </Button>
                         </div>
                     )}
-                </div>
                 <div className="w-full mb-6">
                     <h1 className="text-2xl font-bold">{post.title}</h1>
                 </div>

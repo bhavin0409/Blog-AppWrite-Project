@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 const PostCard = ({
   post,
   featuredImage,
+  
 }) => {  
   const imageUrl = featuredImage ? fileService.getFilePreview(featuredImage) : "fallback-image-url-or-empty-string";
   return (
