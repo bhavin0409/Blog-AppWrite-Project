@@ -25,7 +25,7 @@ export default function Post() {
     const isAuthor = post && userData ? post.userID === userData.$id : false;
 
     const deletePost = () => {
-        databaseService.deletePost(post.$id).then((status) => {
+        databaseService.deletePost(slug).then((status) => {
             if (status) {
                 fileUploadService.deleteFile(post["featured-Image"]);
                 navigate("/");

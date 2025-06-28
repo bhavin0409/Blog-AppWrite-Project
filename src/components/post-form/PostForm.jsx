@@ -11,7 +11,7 @@ import Loading from '../loader/Loading'
 const PostForm = ({ post }) => {
     const navigate = useNavigate()
 
-    const { register, handleSubmit, watch, control, setValue, getValues } = useForm({
+    const { register, handleSubmit, watch, control, setValue, getValues, reset } = useForm({
         defaultValues: {
             title: post?.title || '',
             slug: post?.slug || '',
@@ -24,9 +24,7 @@ const PostForm = ({ post }) => {
 
     const onsubmit = async (data) => {
         if (post) {
-            console.log(data.image[0]);
-
-            const file = data.image[0] ? await fileService.fileUpload(data.image[0]) : null
+            const file = (data.image && data.image[0]) ? await fileService.fileUpload(data.image[0]) : null;
 
             if (file) {
                 fileService.deleteFile(post.featured - Image)
@@ -34,7 +32,7 @@ const PostForm = ({ post }) => {
 
             const dbPost = await databaseService.updatePost(post.$id, {
                 ...data,
-                "featuredImage": file ? file.$id : undefined
+                "featured-Image": file ? file.$id : undefined
             })
 
             if (dbPost) {
@@ -96,7 +94,16 @@ const PostForm = ({ post }) => {
 
     }, [watch, slugTransform, setValue])
 
-
+    useEffect(() => {
+        if (post) {
+            reset({
+                title: post.title || '',
+                slug: post.slug || '',
+                content: post.content || '',
+                status: post.status || 'active',
+            });
+        }
+    }, [post, reset ]);
 
     return (
         <form onSubmit={handleSubmit(onsubmit)} className='flex flex-wrap'>
@@ -156,7 +163,7 @@ const PostForm = ({ post }) => {
                 {post && (
                     <div className='w-full mb-4'>
                         <img
-                            src={fileService.getFilePreview(post["featured-Image"])}
+                            src={fileService.getFilePreview(post["featured-Image"]) + "&mode=admin"}
                             alt={post.title}
                             className='rounded-lg'
                         />
