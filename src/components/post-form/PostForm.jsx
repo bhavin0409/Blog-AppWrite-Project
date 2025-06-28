@@ -3,9 +3,10 @@ import { useForm } from 'react-hook-form'
 import { Button, Input, RTE, Select } from '../index'
 import databaseService from "../../appwrite/database.service"
 import fileService from "../../appwrite/file.service"
-import { useNavigate } from 'react-router-dom'
+import { data, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
+import Loading from '../loader/Loading'
 
 const PostForm = ({ post }) => {
     const navigate = useNavigate()
@@ -18,11 +19,13 @@ const PostForm = ({ post }) => {
             status: post?.status || 'active',
         }
     })
-
-    const userData = useSelector((state) => state.user.userData)
+    
+    const userData = useSelector((state) => state.auth.userData)
 
     const onsubmit = async (data) => {
         if (post) {
+            console.log(data.image[0]);
+            
             const file = data.image[0] ? await fileService.fileUpload(data.image[0]) : null
 
             if (file) {
@@ -31,7 +34,7 @@ const PostForm = ({ post }) => {
 
             const dbPost = await databaseService.updatePost(post.$id, {
                 ...data,
-                featuredImage: file ? file.$id : undefined
+                "featured-Image": file ? file.$id : undefined
             })
 
             if (dbPost) {
@@ -42,12 +45,15 @@ const PostForm = ({ post }) => {
 
             if (file) {
                 const fileID = file.$id
-                data.featuredImage = fileID
+                data["featured-Image"] = fileID
 
                 const dbPost = await databaseService.createPost({
                     ...data,
                     userID: userData.$id,
                 })
+
+                console.log(dbPost);
+                
 
                 if (dbPost) {
                     navigate(`/post/${dbPost.$id}`)
@@ -61,8 +67,7 @@ const PostForm = ({ post }) => {
             return value
             .trim()
             .toLowerCase()
-            .replace(/^[a-zA-z\d\s]/g , '-')
-            .replace(/^\s/g , '-')
+            .replace(/\s+/g, '-')
         }
         return ''
     })
@@ -86,11 +91,11 @@ const PostForm = ({ post }) => {
 
     return (
         <form onSubmit={handleSubmit(onsubmit)} className='flex flex-wrap'>
-            <div className="w-2/3 px-2" >
+            <div className="w-2/3 px-10 flex flex-wrap" >
                 <Input 
                     label='Title :'
                     placeholder="Enter your title"
-                    className="mb-4"
+                    className="mb-4 w-full p-2 rounded-lg"
                     {...register("title", {
                         required:{
                             value:true ,
@@ -106,7 +111,7 @@ const PostForm = ({ post }) => {
                 <Input
                     label='Slug :'
                     placeholder="Enter your slug"
-                    className="mb-4"
+                    className="mb-4 w-full p-2 rounded-lg"
                     {...register("slug" , {
                         required:{
                             value:true ,
@@ -120,19 +125,19 @@ const PostForm = ({ post }) => {
                     }}
                 />
 
-                <RTE 
+                {<RTE 
                     label='Content :'
                     name="content"
                     control={control}
                     defaultValue={getValues('content')}
-                />
+                /> || <Loading/>}
             </div>
 
-            <div className='w-1/3 px-2'>
+            <div className='w-1/3 px-8 flex flex-col items-start'>
                 <Input
                     label='Featured Image :'
                     type="file"
-                    className='mb-4'
+                    className='mb-4 w-full p-2 '
                     accept='image/jpg , image/png , image/jpeg , image/gif , image/bmp'
                     {...register("image" , {
                         require: !post,
@@ -142,7 +147,7 @@ const PostForm = ({ post }) => {
                 {post && (
                     <div className='w-full mb-4'>
                         <img 
-                            src={fileService.getFilePreview(post.featuredImage)} 
+                            src={fileService.getFilePreview(post["featured-Image"])} 
                             alt={post.title}
                             className='rounded-lg'
                         />
@@ -150,7 +155,7 @@ const PostForm = ({ post }) => {
                 )}
 
                 <Select
-                    opations = {['active' , 'inactive']}
+                    options = {['Active' , 'Inactive']}
                     label = 'Status :'
                     className = 'mb-4'
                     {...register('status' , {

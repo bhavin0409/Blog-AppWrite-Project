@@ -6,6 +6,7 @@ const Select = React.forwardRef(({
     classname = '',
     ...props
 } , ref) => {
+    
     const id = useId();
   return (
     <div className='w-full'>
@@ -21,8 +22,8 @@ const Select = React.forwardRef(({
         ref={ref}
         id={id}>
             {options?.map((option) => (
-                <option key={option} value={option.value}>
-                    {option.label}
+                <option key={option} value={option}>
+                    {option}
                 </option>
             ))}
         </select>

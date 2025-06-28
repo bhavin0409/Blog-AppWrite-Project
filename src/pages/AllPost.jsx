@@ -8,10 +8,6 @@ const AllPost = () => {
     const [posts, setPosts] = useState([])
     const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-
-    }, [third])
-
     databaseService.getPosts([])
     .then((posts)=>{
         if (posts) {

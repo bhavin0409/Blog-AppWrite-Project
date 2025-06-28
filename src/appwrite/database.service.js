@@ -22,10 +22,10 @@ export class Service{
                 config.appWriteCollectionID,
                 slug,
                 {
-                    title,
-                    content,
-                    featuredImage,
-                    status,
+                    "title" : title,
+                    "content" : content,
+                    "featured-Image" : featuredImage,
+                    "status" : status,
                     userID
                 }
             )
@@ -41,9 +41,9 @@ export class Service{
                 config.appWriteCollectionID,
                 slug,
                 {
-                    title,
-                    content,
-                    featuredImage,
+                    "title" : title,
+                    "content" : content,
+                    "featured-Image" : featuredImage,
                     status,
                 }
             )   

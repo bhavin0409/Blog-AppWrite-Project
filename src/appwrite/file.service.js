@@ -10,17 +10,17 @@ export class FileUploadService{
         this.client
             .setEndpoint(config.appWriteURL)
             .setProject(config.appWriteProjectID)
-         
-        this.databases = new Databases()
-        this.storage = new Storage()
+        
+        this.databases = new Databases(this.client)
+        this.storage = new Storage(this.client)
     }
 
-    async fileUpload(){
+    async fileUpload(file){
         try {
             return await this.storage.createFile(
                 config.appWriteBucketID,
                 ID.unique(),
-                file
+                file,
             )
         } catch (error) {
             console.log("Appwrite Service Error :: fileUpload :: " , error);

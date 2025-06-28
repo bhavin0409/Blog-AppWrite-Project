@@ -17,6 +17,7 @@ const Register = () => {
         setError('')
         try {
             const session = await authService.createAccount(data)
+            console.log(session);
 
             if (session) {
                 const userData = await authService.getCurrentUser()
@@ -64,7 +65,10 @@ const Register = () => {
                         label='Email :'
                         placeholder='Enter your email'
                         {...register('email', {
-                            required:true,
+                            required: {
+                                value:true,
+                                message:"Email is required"
+                            },
                             validate: {
                                 matchPattern: (value) => /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(value) || 'Please enter a valid email address'
                             }
@@ -76,7 +80,10 @@ const Register = () => {
                         label='Password :'
                         placeholder='Enter your pasword'
                         {...register('password', {
-                            required: true,
+                            required: {
+                                value: true,
+                                message: "Password is required"
+                            },
                             minLength: {
                                 value: 6,
                                 message: 'Password must be at least 6 characters long'
@@ -86,7 +93,7 @@ const Register = () => {
 
                     <Button
                         type='submit'
-                        className='w-full bg-blue-500 py-2 text-white'
+                        className='w-full bg-blue-500 py-2 text-white '
                         bgColor='bg-blue-500'
                     > Create an Account </Button>
                 </form>

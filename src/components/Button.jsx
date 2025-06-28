@@ -9,7 +9,7 @@ const Button = ({
     ...props
 }) => {
   return (
-    <button className={`px-6 py-2 duration-200 ${bgColor} ${textColor} ${classname}`} type='submit' {...props}>
+    <button className={`px-6 py-2 duration-200 ${bgColor} ${textColor} ${classname}`} type={type} {...props}>
       {children}
     </button>
   )
