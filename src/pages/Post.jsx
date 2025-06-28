@@ -55,10 +55,10 @@ export default function Post() {
                             </Button>
                         </div>
                     )}
-                <div className="w-full mb-6">
+                <div className="w-full mb-6 text-center py-6">
                     <h1 className="text-2xl font-bold">{post.title}</h1>
                 </div>
-                <div className="browser-css">
+                <div className="browser-css px-24">
                     {parse(post.content)}
                     </div>
             </Container>
