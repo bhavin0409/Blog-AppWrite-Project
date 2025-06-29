@@ -39,7 +39,7 @@ export default function Post() {
             <Container>
                 <div className="w-full flex justify-center mb-4 relative border rounded-xl p-2">
                     <img
-                        src={fileUploadService.getFilePreview(post["featured-Image"]) + "&mode=admin"}
+                        src={fileUploadService.getFilePreview(post["featured-Image"]) + "&mode=user"}
                         alt={post.title}
                         className="rounded-xl w-1/2"
                     />
