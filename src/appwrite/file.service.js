@@ -43,7 +43,7 @@ export class FileUploadService{
 
     getFilePreview(fileId){
         try {
-            return this.storage.getFilePreview(
+            return this.storage.getFileView(
                 config.appWriteBucketID,
                 fileId
             )
