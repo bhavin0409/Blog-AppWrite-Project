@@ -5,6 +5,7 @@ import fileUploadService from "../appwrite/file.service";
 import { Button, Container } from "../components";
 import parse from "html-react-parser";
 import { useSelector } from "react-redux";
+import Loading from "../components/loader/Loading";
 
 export default function Post() {
     const [post, setPost] = useState(null);
@@ -63,5 +64,5 @@ export default function Post() {
                     </div>
             </Container>
         </div>
-    ) : null;
+    ) : (<Loading/>);
 }

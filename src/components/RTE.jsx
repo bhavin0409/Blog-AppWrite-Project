@@ -2,6 +2,7 @@ import { Editor } from '@tinymce/tinymce-react'
 import React from 'react'
 import { Controller } from 'react-hook-form'
 import config from '../config/config'
+import Loading from './loader/Loading'
 
 const RTE = ({
     name,
@@ -57,7 +58,7 @@ const RTE = ({
                 )}
             />
         </div>
-    )
+    ) || (<Loading/>)
 }
 
 export default RTE
