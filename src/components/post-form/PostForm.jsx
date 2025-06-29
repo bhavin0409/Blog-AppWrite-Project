@@ -141,12 +141,12 @@ const PostForm = ({ post }) => {
                     }}
                 />
 
-                {<RTE
+                <RTE
                     label='Content :'
                     name="content"
                     control={control}
                     defaultValue={getValues('content')}
-                /> || <Loading />}
+                />
             </div>
 
             <div className='w-1/3 px-8 flex flex-col items-start'>
