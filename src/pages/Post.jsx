@@ -41,7 +41,7 @@ export default function Post() {
                     <img
                         src={fileUploadService.getFilePreview(post["featured-Image"]) + "&mode=admin"}
                         alt={post.title}
-                        className="rounded-xl"
+                        className="rounded-xl w-1/2"
                     />
                 </div>
                     {isAuthor && (
