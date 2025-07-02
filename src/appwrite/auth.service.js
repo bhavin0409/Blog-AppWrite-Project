@@ -53,8 +53,22 @@ export class AuthService {
             console.log("Appwrite Service Error :: logOut :: " , error);
         }
     }
+
+    async sendVerificationEmail() {
+        try {
+            return await this.account.createVerification("https://anime-blog-appwrite.netlify.app/verify");
+        } catch (error) {
+            console.log("Appwrite Service Error :: sendVerificationEmail :: ", error);
+        }
+    }
+
 }
+
+
 
 const authService = new AuthService();
 
 export default authService;
+
+// After user is created and logged in
+await authService.sendVerificationEmail();
