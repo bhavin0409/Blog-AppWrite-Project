@@ -1,6 +1,6 @@
 import { use, useEffect, useState } from 'react'
 import './App.css'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import authService from './appwrite/auth.service'
 import { login , logout} from './store/authSlice'
 import Loading from './components/loader/Loading'
@@ -11,7 +11,10 @@ import Footer from './components/footer/Footer'
 
 function App() {
   const [loading, setLoading] = useState(true)
+  const status = useSelector((state) => state.auth.status);
   const dispatch = useDispatch()
+
+  
 
   useEffect(() => {
     authService.getCurrentUser()
@@ -29,7 +32,7 @@ function App() {
       .finally(() => {
         setLoading(false)
       })
-  }, [])
+  }, [dispatch , status])
   
   return !loading ? (
     <div className='min-h-screen flex flex-wrap justify-center bg-gray-300'>
