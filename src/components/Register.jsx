@@ -27,14 +27,14 @@ const Register = () => {
                 setError("A verification email has been sent. Please check your inbox and verify your account before logging in.");
             }
 
-            if (session) {
-                const userData = await authService.getCurrentUser()
-                if (userData) {
-                    dispatch(login(userData))
-                }
+            // if (session) {
+            //     const userData = await authService.getCurrentUser()
+            //     if (userData) {
+            //         dispatch(login(userData))
+            //     }
 
-                navigate('/')
-            }
+            //     navigate('/')
+            // }
 
         } catch (error) {
             setError(error.message || 'Something went wrong')
