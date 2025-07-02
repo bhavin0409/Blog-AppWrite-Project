@@ -39,12 +39,12 @@ export default function Post() {
             <Container>
                 <div className="relative flex flex-col items-center">
                     {/* Image Card */}
-                    <div className="w-full max-w-3xl aspect-video rounded-3xl overflow-hidden shadow-2xl mb-8 group transition-transform duration-300 hover:scale-105 bg-white flex items-center justify-center">
+                    <div className="w-full max-w-3xl aspect-video rounded-3xl overflow-hidden shadow-2xl mb-8 group transition-transform duration-300 hover:scale-105 bg-white flex items-center justify-center mx-auto">
                         <img
                             src={fileUploadService.getFilePreview(post["featured-Image"])}
                             alt={post.title}
                             className="w-full h-full object-fill object-center transition-all duration-300 group-hover:brightness-90"
-                            style={{ maxHeight: "420px" }}
+                            style={{ maxHeight: "320px" }}
                         />
                         {/* Title overlay for large screens */}
                         <div className="hidden lg:block absolute bottom-8 left-8 bg-black bg-opacity-60 px-6 py-3 rounded-xl">
@@ -69,7 +69,7 @@ export default function Post() {
                         </div>
                     )}
                     {/* Content */}
-                    <div className="browser-css max-w-6xl mx-auto rounded-2xl shadow-lg p-8">
+                    <div className="browser-css w-full max-w-5xl mx-auto rounded-2xl shadow-lg p-2 sm:p-4 md:p-8  break-words overflow-x-auto">
                         {parse(post.content)}
                     </div>
                 </div>
