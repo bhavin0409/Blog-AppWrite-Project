@@ -11,6 +11,7 @@ import Loading from '../loader/Loading'
 const PostForm = ({ post }) => {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(!post);
+    const [submitting, setSubmitting] = useState(false); // <-- Add this
 
     const { register, handleSubmit, watch, control, setValue, getValues, reset } = useForm({
         defaultValues: {
@@ -24,49 +25,54 @@ const PostForm = ({ post }) => {
     const userData = useSelector((state) => state.auth.userData)
 
     const onsubmit = async (data) => {
-        if (post) {
-            const file = (data.image && data.image[0]) ? await fileService.fileUpload(data.image[0]) : null;
+        setSubmitting(true); // <-- Disable button
+        try {
+            if (post) {
+                const file = (data.image && data.image[0]) ? await fileService.fileUpload(data.image[0]) : null;
 
-            if (file) {
-                fileService.deleteFile(post.featured - Image)
-            }
+                if (file) {
+                    fileService.deleteFile(post.featured - Image)
+                }
 
-            const dbPost = await databaseService.updatePost(post.$id, {
-                ...data,
-                "featured-Image": file ? file.$id : undefined
-            })
-
-            if (dbPost) {
-                navigate(`/post/${dbPost.$id}`)
-            }
-        } else {
-            if (!data.image || !data.image[0]) {
-                alert("Featured image is required!");
-                return;
-            }
-
-            const file = data.image[0] ? await fileService.fileUpload(data.image[0]) : null
-
-            if (!file) {
-                alert("Image upload failed!");
-                return;
-            }
-
-            if (file) {
-                const fileID = file.$id
-                data["featuredImage"] = fileID
-
-                const dbPost = await databaseService.createPost({
+                const dbPost = await databaseService.updatePost(post.$id, {
                     ...data,
-                    userID: userData.$id,
+                    "featured-Image": file ? file.$id : undefined
                 })
 
-                console.log(dbPost);
-
-                if (dbPost) {
+                if (dbPost && dbPost.$id) {
                     navigate(`/post/${dbPost.$id}`)
                 }
+            } else {
+                if (!data.image || !data.image[0]) {
+                    alert("Featured image is required!");
+                    setSubmitting(false); // <-- Re-enable if error
+                    return;
+                }
+
+                const file = data.image[0] ? await fileService.fileUpload(data.image[0]) : null
+
+                if (!file) {
+                    alert("Image upload failed!");
+                    setSubmitting(false); // <-- Re-enable if error
+                    return;
+                }
+
+                if (file) {
+                    const fileID = file.$id
+                    data["featuredImage"] = fileID
+
+                    const dbPost = await databaseService.createPost({
+                        ...data,
+                        userID: userData.$id,
+                    })
+
+                    if (dbPost && dbPost.$id) {
+                        navigate(`/post/${dbPost.$id}`)
+                    }
+                }
             }
+        } finally {
+            setSubmitting(false); // <-- Always re-enable after submit
         }
     }
 
@@ -104,11 +110,9 @@ const PostForm = ({ post }) => {
                 status: post.status || 'active',
             });
         }
-    }, [post, reset ]);
+    }, [post, reset]);
 
-    if (loading) {
-        return <Loading />;
-    }
+   
 
     return (
         <form onSubmit={handleSubmit(onsubmit)} className="flex flex-col lg:flex-row flex-wrap">
@@ -191,8 +195,9 @@ const PostForm = ({ post }) => {
                     type='submit'
                     bgColor={post ? 'bg-green-500' : 'bg-blue-500'}
                     classname='w-full'
+                    disabled={submitting} // <-- Disable while submitting
                 >
-                    {post ? 'Update Post' : 'Create Post'}
+                    {submitting ? (post ? 'Updating...' : 'Creating...') : (post ? 'Update Post' : 'Create Post')}
                 </Button>
             </div>
         </form>
