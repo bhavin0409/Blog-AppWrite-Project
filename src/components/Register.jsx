@@ -19,6 +19,13 @@ const Register = () => {
         try {
             const session = await authService.createAccount(data)
             console.log(session);
+            if (session) {
+                // Send verification email
+                await authService.sendVerificationEmail();
+
+                // Show message to user
+                setError("A verification email has been sent. Please check your inbox and verify your account before logging in.");
+            }
 
             if (session) {
                 const userData = await authService.getCurrentUser()
@@ -48,7 +55,7 @@ const Register = () => {
                         type='text'
                         label='Name :'
                         placeholder='Enter Your Name'
-                        {...register('name' , {
+                        {...register('name', {
                             required: true,
                             minLength: {
                                 value: 2,
@@ -61,14 +68,14 @@ const Register = () => {
                         })}
                     />
 
-                    <Input 
+                    <Input
                         type='email'
                         label='Email :'
                         placeholder='Enter your email'
                         {...register('email', {
                             required: {
-                                value:true,
-                                message:"Email is required"
+                                value: true,
+                                message: "Email is required"
                             },
                             validate: {
                                 matchPattern: (value) => /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(value) || 'Please enter a valid email address'

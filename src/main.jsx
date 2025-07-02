@@ -14,6 +14,7 @@ import Login from './pages/Login.jsx'
 import Post from "./pages/Post";
 
 import AllPost from "./pages/AllPost";
+import Verify from './components/Verify.jsx'
 
 const router = createBrowserRouter([
     {
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
                 path: "/post/:slug",
                 element: <Post />,
             },
+            {
+                path: "/verify",
+                element: <Verify />,
+            }
         ],
     },
 ])
