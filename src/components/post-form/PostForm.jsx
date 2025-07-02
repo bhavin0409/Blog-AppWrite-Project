@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button, Input, RTE, Select } from '../index'
 import databaseService from "../../appwrite/database.service"
@@ -10,6 +10,7 @@ import Loading from '../loader/Loading'
 
 const PostForm = ({ post }) => {
     const navigate = useNavigate()
+    const [loading, setLoading] = useState(!post);
 
     const { register, handleSubmit, watch, control, setValue, getValues, reset } = useForm({
         defaultValues: {
@@ -105,9 +106,13 @@ const PostForm = ({ post }) => {
         }
     }, [post, reset ]);
 
+    if (loading) {
+        return <Loading />;
+    }
+
     return (
-        <form onSubmit={handleSubmit(onsubmit)} className='flex flex-wrap'>
-            <div className="w-2/3 px-10 flex flex-wrap" >
+        <form onSubmit={handleSubmit(onsubmit)} className="flex flex-col lg:flex-row flex-wrap">
+            <div className="w-full lg:w-2/3 px-2 lg:px-10 flex flex-col flex-wrap">
                 <Input
                     label='Title :'
                     placeholder="Enter your title"
@@ -149,23 +154,23 @@ const PostForm = ({ post }) => {
                 />
             </div>
 
-            <div className='w-1/3 px-8 flex flex-col items-start'>
+            <div className="w-full lg:w-1/3 px-2 lg:px-8 flex flex-col items-start mt-6 lg:mt-0">
                 <Input
                     label='Featured Image :'
                     type="file"
-                    className='mb-4 w-full p-2 '
-                    accept='image/jpg , image/png , image/jpeg , image/gif , image/bmp'
+                    className="mb-4 w-full p-2"
+                    accept="image/jpg, image/png, image/jpeg, image/gif, image/bmp"
                     {...register("image", {
-                        require: !post,
+                        required: !post,
                     })}
                 />
 
                 {post && (
-                    <div className='w-full mb-4'>
+                    <div className="w-full mb-4">
                         <img
-                            src={fileService.getFilePreview(post["featured-Image"]) + "&mode=admin"}
+                            src={fileService.getFilePreview(post["featured-Image"])}
                             alt={post.title}
-                            className='rounded-lg'
+                            className="rounded-lg w-full max-h-60 object-contain"
                         />
                     </div>
                 )}
@@ -173,7 +178,7 @@ const PostForm = ({ post }) => {
                 <Select
                     options={['Active', 'Inactive']}
                     label='Status :'
-                    className='mb-4'
+                    className='mb-4 w-full'
                     {...register('status', {
                         required: {
                             value: true,
@@ -189,7 +194,6 @@ const PostForm = ({ post }) => {
                 >
                     {post ? 'Update Post' : 'Create Post'}
                 </Button>
-
             </div>
         </form>
     )
