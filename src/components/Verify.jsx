@@ -13,8 +13,8 @@ const Verify = () => {
         if (userId && secret) {
             authService.account.updateVerification(userId, secret)
                 .then(() => {
-                    setMessage("Email verified! You can now log in.");
-                    setTimeout(() => navigate("/login"), 2000);
+                    setMessage("Email verified! You are now logged in.");
+                    setTimeout(() => navigate("/"), 2000);
                 })
                 .catch(() => setMessage("Verification failed or link expired."));
         } else {
