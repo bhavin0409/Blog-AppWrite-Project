@@ -18,12 +18,11 @@ const Register = () => {
         setError('')
         try {
             const session = await authService.createAccount(data)
-            console.log(session);
+            
             if (session) {
                 // Send verification email
                 await authService.sendVerificationEmail();
 
-                // Show message to user
                 setError("A verification email has been sent. Please check your inbox and verify your account before logging in.");
             }
 
@@ -39,7 +38,7 @@ const Register = () => {
             }, 3000)
 
         } catch (error) {
-            setError(error.message || 'Something went wrong')
+            setError(error?.message || error?.body?.message || 'Something went wrong')
         }
     }
     return (

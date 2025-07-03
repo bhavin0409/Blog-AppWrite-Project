@@ -28,15 +28,17 @@ const PostForm = ({ post }) => {
         setSubmitting(true); // <-- Disable button
         try {
             if (post) {
+                console.log(post["featured-Image"])
+                
                 const file = (data.image && data.image[0]) ? await fileService.fileUpload(data.image[0]) : null;
-
                 if (file) {
-                    fileService.deleteFile(post.featured - Image)
+                    await fileService.deleteFile(post["featured-Image"])
                 }
+
 
                 const dbPost = await databaseService.updatePost(post.$id, {
                     ...data,
-                    "featured-Image": file ? file.$id : undefined
+                    featuredImage: file ? file.$id : undefined
                 })
 
                 if (dbPost && dbPost.$id) {
@@ -51,20 +53,19 @@ const PostForm = ({ post }) => {
 
                 const file = data.image[0] ? await fileService.fileUpload(data.image[0]) : null
 
-                if (!file) {
-                    alert("Image upload failed!");
-                    setSubmitting(false); // <-- Re-enable if error
-                    return;
-                }
+                console.log(file.$id);
 
                 if (file) {
                     const fileID = file.$id
-                    data["featuredImage"] = fileID
+                    data.featuredImage = fileID
 
                     const dbPost = await databaseService.createPost({
                         ...data,
                         userID: userData.$id,
                     })
+
+                    console.log("dbPost ::",dbPost);
+                    
 
                     if (dbPost && dbPost.$id) {
                         navigate(`/post/${dbPost.$id}`)
