@@ -44,7 +44,7 @@ export default function Post() {
                             src={fileUploadService.getFilePreview(post["featured-Image"])}
                             alt={post.title}
                             className="w-full h-full object-fill object-center transition-all duration-300 group-hover:brightness-90"
-                            style={{ maxHeight: "320px" }}
+                            style={{ maxHeight: "500px" }}
                         />
                         {/* Title overlay for large screens */}
                         <div className="hidden lg:block absolute bottom-8 left-8 bg-black bg-opacity-60 px-6 py-3 rounded-xl">
